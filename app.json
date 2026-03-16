@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "HubXUltra",
+    "slug": "hubxultra",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "hubxultra",
+    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#000" },
+    "updates": { "url": "https://exp.host/@yourusername/hubxultra" },
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.hubxultra.app" },
+    "android": { "package": "com.hubxultra.app", "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png" } },
+    "web": { "favicon": "./assets/favicon.png" }
+  }
+}

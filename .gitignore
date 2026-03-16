@@ -1,0 +1,27 @@
+# Expo / React Native
+node_modules/
+.expo/
+dist/
+android/.gradle/
+ios/Pods/
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Логи и временные файлы
+*.log
+.DS_Store
+Thumbs.db
+
+# Секреты (никогда не коммить!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Кэш
+.expo-shared/
