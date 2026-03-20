@@ -24,4 +24,7 @@ Thumbs.db
 .env.production.local
 
 # Кэш
-.expo-shared/
+.expo-shared/-e 
+# Environment files
+*.env
+*.env.*
