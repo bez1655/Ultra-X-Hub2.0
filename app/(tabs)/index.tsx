@@ -36,8 +36,9 @@ import { sites, categories, categoryColors, Site } from '../../constants/sites';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
 
-// Grok API Key
-const GROK_API_KEY = 'xai-FG3Jsy4bvCjsoVlmu85R0LgSGRGgoN0Q7SObmaoo5DLervVYlVPTXSxaQD80UVWKDdy2TilukGfRIJ5Q';
+// Grok API from environment variables
+const GROK_API_KEY = process.env.EXPO_PUBLIC_GROK_API_KEY || '';
+const GROK_API_URL = process.env.EXPO_PUBLIC_GROK_API_URL || 'https://api.x.ai/v1/chat/completions';
 
 // Рекомендации (моковые данные)
 const mockRecommendations = [
@@ -117,7 +118,7 @@ export default function Home() {
     setAiDescription('');
 
     try {
-      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      const response = await fetch(GROK_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,7 +165,7 @@ export default function Home() {
     setAdvisorLoading(true);
 
     try {
-      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      const response = await fetch(GROK_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
