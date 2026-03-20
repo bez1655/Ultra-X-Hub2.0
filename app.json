@@ -6,10 +6,49 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "hubxultra",
-    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#000" },
-    "updates": { "url": "https://exp.host/@yourusername/hubxultra" },
-    "ios": { "supportsTablet": true, "bundleIdentifier": "com.hubxultra.app" },
-    "android": { "package": "com.hubxultra.app", "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png" } },
-    "web": { "favicon": "./assets/favicon.png" }
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#09090b"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hubxultra.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "For VR features"
+      }
+    },
+    "android": {
+      "package": "com.hubxultra.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#09090b"
+      },
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ff2d55"
+        }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

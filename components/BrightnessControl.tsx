@@ -6,11 +6,11 @@ import {
   StyleSheet,
   Dimensions,
   Animated,
-  PanGestureHandler,
-  type PanGestureHandlerGestureEvent,
 } from 'react-native';
-import * as Brightness from 'expo-screen-brightness';
+import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import * as Brightness from 'expo-brightness';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Sun } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const LEFT_HALF = SCREEN_WIDTH / 2;
@@ -25,8 +25,11 @@ export default function BrightnessControl() {
   useEffect(() => {
     (async () => {
       try {
-        const current = await Brightness.getScreenBrightnessAsync();
-        currentBrightness.current = current ?? 0.5;
+        const { status } = await Brightness.requestPermissionsAsync();
+        if (status === 'granted') {
+          const current = await Brightness.getBrightnessAsync();
+          currentBrightness.current = current ?? 0.5;
+        }
       } catch (e) {
         console.log('Не удалось получить текущую яркость', e);
       }
@@ -44,16 +47,16 @@ export default function BrightnessControl() {
   const hideIndicator = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 800,
-      delay: 1200,
+      duration: 600,
+      delay: 1000,
       useNativeDriver: true,
     }).start();
   };
 
   const onGestureEvent = (event: PanGestureHandlerGestureEvent) => {
-    const { translationY, x, state } = event.nativeEvent;
+    const { translationY, x } = event.nativeEvent;
 
-    // Игнорируем правую половину экрана (обычно там регулировка громкости)
+    // Игнорируем правую половину экрана
     if (x >= LEFT_HALF) return;
 
     // Показываем индикатор при первом движении
@@ -64,19 +67,18 @@ export default function BrightnessControl() {
 
     // Изменяем яркость
     let next = currentBrightness.current - translationY * 0.002;
-    next = Math.max(0.05, Math.min(1, next)); // 5% минимум — чтобы не было совсем чёрно
+    next = Math.max(0.05, Math.min(1, next));
 
     if (Math.abs(next - currentBrightness.current) > 0.005) {
       currentBrightness.current = next;
-      Brightness.setScreenBrightnessAsync(next).catch(() => {});
+      Brightness.setBrightnessAsync(next).catch(() => {});
       setBrightness(next);
     }
   };
 
   const onHandlerStateChange = () => {
     hideIndicator();
-    // Сбрасываем индикатор через 2 секунды после окончания жеста
-    setTimeout(() => setBrightness(null), 2200);
+    setTimeout(() => setBrightness(null), 1800);
   };
 
   const percent = brightness !== null ? Math.round(brightness * 100) : null;
@@ -90,20 +92,24 @@ export default function BrightnessControl() {
       minPointers={1}
       maxPointers={1}
     >
-      <View style={StyleSheet.absoluteFill}>
+      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         {brightness !== null && (
           <Animated.View
             style={[
               styles.overlay,
               {
                 opacity: fadeAnim,
-                paddingTop: insets.top + 20,
+                paddingTop: insets.top + 100,
               },
             ]}
+            pointerEvents="none"
           >
             <View style={styles.indicatorContainer}>
+              <Sun size={24} color="#ff2d55" style={{ marginBottom: 12 }} />
               <Text style={styles.percentText}>{percent}%</Text>
-              <View style={[styles.bar, { height: `${percent}%` }]} />
+              <View style={styles.barContainer}>
+                <View style={[styles.bar, { height: percent ? `${percent}%` : '0%' }]} />
+              </View>
             </View>
           </Animated.View>
         )}
@@ -115,33 +121,38 @@ export default function BrightnessControl() {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    pointerEvents: 'none',
   },
   indicatorContainer: {
-    width: 60,
-    height: 220,
-    backgroundColor: 'rgba(40,40,50,0.85)',
-    borderRadius: 30,
-    padding: 8,
+    width: 70,
+    height: 200,
+    backgroundColor: 'rgba(24,24,27,0.95)',
+    borderRadius: 35,
+    padding: 12,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#27272a',
+  },
+  barContainer: {
+    flex: 1,
+    width: 14,
+    backgroundColor: '#27272a',
+    borderRadius: 7,
     overflow: 'hidden',
+    justifyContent: 'flex-end',
+    marginTop: 8,
   },
   bar: {
-    width: 12,
+    width: '100%',
     backgroundColor: '#ff2d55',
-    borderRadius: 6,
-    position: 'absolute',
-    bottom: 8,
+    borderRadius: 7,
   },
   percentText: {
     color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    zIndex: 1,
+    fontSize: 18,
+    fontWeight: '700',
   },
 });
