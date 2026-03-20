@@ -37,8 +37,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
 
 // Grok API from environment variables
-const GROK_API_KEY = process.env.EXPO_PUBLIC_GROK_API_KEY || '';
-const GROK_API_URL = process.env.EXPO_PUBLIC_GROK_API_URL || 'https://api.x.ai/v1/chat/completions';
+const GROK_API_KEY = process.env.EXPO_PUBLIC_GROK_API_KEY ?? '';
+const GROK_API_URL = process.env.EXPO_PUBLIC_GROK_API_URL ?? '';
 
 // Рекомендации (моковые данные)
 const mockRecommendations = [
